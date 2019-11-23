@@ -1,0 +1,48 @@
+version: "2"
+services:
+  server:
+    image: gitea/gitea:1.10.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitea.rule=Host(`gitea.example.com`)"
+      - "traefik.http.routers.gitea.entrypoints=https"
+      - "traefik.http.routers.gitea.tls=true"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - DB_TYPE=postgres
+      - DB_HOST=db:5432
+      - DB_NAME=gitea
+      - DB_USER=gitea
+      - DB_PASSWD=qwerty123
+    networks:
+      - web
+      - internal
+    volumes:
+      - /opt/gitea/data:/data
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:9.6
+    labels:
+      - "traefik.enable=false"
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=qwerty123
+      - POSTGRES_DB=gitea
+    networks:
+      - internal
+    volumes:
+      - /opt/gitea/postgres:/var/lib/postgresql/data
+    restart: always
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

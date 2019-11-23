@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2019-10-12T01-39-57Z
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY
+    networks:
+      - web
+    volumes:
+      - /opt/minio/config:/root/.minio
+      - /opt/minio/data:/data
+    container_name: minio
+    command: server /data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minio.rule=Host(`minio.example.com`)"
+      - "traefik.http.routers.minio.entrypoints=https"
+      - "traefik.http.routers.minio.tls=true"
+#      - "traefik.http.middlewares.minio.redirectscheme.scheme=https"
+#      - "traefik.http.routers.minio.tls.certresolver=default"
+    restart: always
+
+networks:
+  web:
+    external: true

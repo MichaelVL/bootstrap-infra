@@ -1,0 +1,25 @@
+[log]
+  level = "debug"
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+  [entryPoints.https]
+    address = ":443"
+
+[api]
+  insecure = true
+  dashboard = true
+  debug = true
+
+## TLS
+[providers.file]
+watch=true
+
+[[tls]]
+  [[tls.certificate]]
+    certFile = "/certs/cert.crt"
+    keyFile = "/certs/cert.key"
+
+[providers.docker]
+exposedByDefault = false
