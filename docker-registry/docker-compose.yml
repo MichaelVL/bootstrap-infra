@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+    volumes:
+      - /opt/registry:/var/lib/registry
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.registry.rule=Host(`registry.example.com`)"
+      - "traefik.http.routers.registry.entrypoints=https"
+      - "traefik.http.routers.registry.tls=true"
+    restart: always
+
+networks:
+  web:
+    external: true
