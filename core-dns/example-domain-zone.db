@@ -1,0 +1,7 @@
+example-domain.com.          IN  SOA dns.example-domain.com. adminemail.example-domain.com. 20191124 7200 3600 1209600 3600
+gateway.example-domain.com.  IN  A   192.168.3.1
+dns.example-domain.com.      IN  A   192.168.3.2
+hosta.example-domain.com.    IN  A   192.168.3.3
+hostb.example-domain.com.    IN  A   192.168.3.4
+hostc.example-domain.com.    IN  A   192.168.3.5
+hostac.example-domain.com    IN  CNAME   hosta.example-domain.com

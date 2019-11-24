@@ -8,6 +8,8 @@ dirs:
 	mkdir -p /opt/minio/data
 	mkdir -p /opt/gitea/data
 	mkdir -p /opt/gitea/postgres
+	mkdir -p /opt/registry
+	mkdir -p /opt/coredns
 
 .PHONY: cert
 cert:
@@ -24,6 +26,8 @@ show-cert:
 .PHONY: copy-files
 copy-files:
 	cp traefik/traefik.toml /opt/traefik/
+	cp core-dns/example-Corefile /opt/coredns/Corefile
+	cp core-dns/example-domain-zone.db /opt/coredns/
 
 .PHONY: network
 net:

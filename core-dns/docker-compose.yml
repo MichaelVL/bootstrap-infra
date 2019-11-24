@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  dns:
+    image: coredns/coredns:1.6.5
+    ports:
+      - 5353:53/udp
+      - 5353:53/tcp
+    volumes:
+      - /opt/coredns/:/conf
+    command: -conf /conf/Corefile
+    restart: always
+
+networks:
+  web:
+    external: true
