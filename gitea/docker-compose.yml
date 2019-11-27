@@ -3,6 +3,7 @@ services:
   server:
     image: gitea/gitea:1.10.0
     labels:
+      - "traefik.http.services.gitea.loadBalancer.server.port=3000"
       - "traefik.enable=true"
       - "traefik.http.routers.gitea.rule=Host(`gitea.example.com`)"
       - "traefik.http.routers.gitea.entrypoints=https"

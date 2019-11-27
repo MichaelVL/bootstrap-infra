@@ -1,3 +1,6 @@
+[global]
+  sendAnonymousUsage = false
+
 [log]
   level = "debug"
 
@@ -12,14 +15,10 @@
   dashboard = true
   debug = true
 
-## TLS
-[providers.file]
-watch=true
-
-[[tls]]
-  [[tls.certificate]]
-    certFile = "/certs/cert.crt"
-    keyFile = "/certs/cert.key"
+[providers]
+  [providers.file]
+  filename = "/etc/traefik/traefik.config.toml"
+  watch=true
 
 [providers.docker]
 exposedByDefault = false

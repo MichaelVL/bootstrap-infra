@@ -5,8 +5,15 @@ services:
     image: registry:2
     ports:
       - 5000:5000
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+    networks:
+      - web
     volumes:
-      - /opt/registry:/var/lib/registry
+      - /opt/registry/data:/var/lib/registry
+      - /opt/registry/auth:/auth
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.registry.rule=Host(`registry.example.com`)"

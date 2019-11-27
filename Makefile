@@ -1,3 +1,6 @@
+.PHONY: all
+all: dirs cert registry-users copy-files network
+
 .PHONY: dirs
 dirs:
 	mkdir -p /opt/traefik/certs
@@ -8,12 +11,13 @@ dirs:
 	mkdir -p /opt/minio/data
 	mkdir -p /opt/gitea/data
 	mkdir -p /opt/gitea/postgres
-	mkdir -p /opt/registry
+	mkdir -p /opt/registry/data
+	mkdir -p /opt/registry/auth
 	mkdir -p /opt/coredns
 
 .PHONY: cert
 cert:
-	openssl req -x509 -nodes -subj '/C=DK/ST=ACMEprov/L=ACMEloc/O=ACMEcompany/OU=ACMEorg/CN=minio.example.com' -days 365 -newkey rsa:2048 -keyout /opt/traefik/certs/cert.key -out /opt/traefik/certs/cert.crt
+	openssl req -x509 -nodes -subj '/C=DK/ST=ACMEprov/L=ACMEloc/O=ACMEcompany/OU=ACMEorg/CN=*.example.com' -days 365 -newkey rsa:2048 -keyout /opt/traefik/certs/cert.key -out /opt/traefik/certs/cert.crt
 	#openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /opt/traefik/certs/cert.key -out /opt/traefik/certs/cert.crt
 	chmod 644 /opt/traefik/certs/cert.crt
 	chmod 600 /opt/traefik/certs/cert.key
@@ -25,10 +29,21 @@ show-cert:
 
 .PHONY: copy-files
 copy-files:
-	cp traefik/traefik.toml /opt/traefik/
+	cp traefik/traefik.toml traefik/traefik.config.toml /opt/traefik/
 	cp core-dns/example-Corefile /opt/coredns/Corefile
 	cp core-dns/example-domain-zone.db /opt/coredns/
 
 .PHONY: network
-net:
+network:
 	docker network create web
+
+.PHONY: registry-users
+registry-users:
+	docker run --entrypoint htpasswd registry:2 -Bbn testuser testpassword > /opt/registry/auth/htpasswd
+
+.PHONY: trust-cert
+trust-cert:
+	mkdir -p '/etc/docker/certs.d/registry.example.com'
+	cp cert.crt '/etc/docker/certs.d/registry.example.com/ca.crt'
+	cp cert.crt /usr/local/share/ca-certificates/registry.example.com.crt
+	update-ca-certificates

@@ -11,7 +11,8 @@ services:
       - web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/traefik/traefik.toml:/traefik.toml
+      - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - /opt/traefik/traefik.config.toml:/etc/traefik/traefik.config.toml
       - /opt/traefik/certs/:/etc/traefik/certs/
     container_name: traefik
     restart: always
